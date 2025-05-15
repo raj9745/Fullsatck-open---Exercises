@@ -1,24 +1,39 @@
+```mermaid
+    sequenceDiagram 
+    participant Browser
+    participant Server
+    Browser ->> Server : POST https://studies.cs.helsinki.fi/exampleapp/notes 
+    activate Server
+    Server --> Browser: Status code: 302 & Redirection
+    deactivate Server
+    Note left of Server: On submitting user input in the form, the browser sends note data to server as a POST request
 
-    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
-    activate server
-    server-->>browser: HTML document
-    deactivate server
+    Browser ->> Server: GET https://studies.cs.helsinki.fi/exampleapp/notes 
+    activate Server
+    Server --> Browser: HTML Document
+    deactivate Server
 
-    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
-    activate server
-    server-->>browser: the css file
-    deactivate server
+    Browser ->> Server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
+    activate Server
+    Server --> Browser: the css file
+    deactivate Server
 
-    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.js
-    activate server
-    server-->>browser: the JavaScript file
-    deactivate server
+    Browser ->> Server: GET https://studies.cs.helsinki.fi/exampleapp/main.js
+    activate Server
+    Server --> Browser: the JavaScript file
+    deactivate Server
+    Note left of Server: The browser starts executing the JavaScript code that fetched the JSON from the server
 
-    Note right of browser: The browser starts executing the JavaScript code that fetches the JSON from the server
+    Browser ->> Server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
+    activate Server
+    Server --> Browser: [{"content":"eyess", "date":"2025-2-21},..]
+    deactivate Server
 
-    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
-    activate server
-    server-->>browser: [{ "content": "HTML is easy", "date": "2023-1-1" }, ... ]
-    deactivate server
 
-    Note right of browser: The browser executes the callback function that renders the notes
+
+
+
+    
+
+
+```
