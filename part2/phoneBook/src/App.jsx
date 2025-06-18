@@ -3,10 +3,12 @@ import {Names} from "./components/Names";
 const App = (props) => {
   const [persons, setPersons] = useState(props.persons)
   const [newName, setNewName] = useState('')
-    const [newNumber, setNewNumber] = useState('')
-const addName = (event) => {
+  const [newNumber, setNewNumber] = useState('')
+  const [search,setSearch] = useState('')
+  const [filter,setFilter] = useState(props.persons)
 
-  const nameExists = persons.some(person => person.name === newName);
+const addName = (event) => {
+ const nameExists = persons.some(person => person.name === newName);
 if (nameExists){
   alert(`${newName} is already added to  phonebook`);
   return ;
@@ -33,9 +35,23 @@ const handleNumberChange = (event)=>{
   console.log(event.target.value);
   setNewNumber(event.target.value)
 }
+
+const handleSearchChange = (event)=>{
+  console.log(event.target.value);
+  setSearch(event.target.value)
+
+ const filterItems = persons.filter(person =>
+  person.name.toLowerCase().includes(event.target.value.toLowerCase())
+)
+  setFilter(filterItems);
+}
   return (
     <div>
       <h2>Phonebook</h2>
+      <div>filter shown with/search: <input value={search} onChange={handleSearchChange} />
+      </div>
+      
+      <h1>add a new</h1>
       <form onSubmit={addName}>
         <div>
           name: <input  value = {newName} onChange= {handleNameChange} type= "text"/>
@@ -51,7 +67,7 @@ const handleNumberChange = (event)=>{
       </form>
 
       <h2>Numbers</h2>
-    {persons.map((person)=>{
+    {filter.map((person)=>{
       return<Names key= {person.id} person= {person} />
     })}
     </div>
