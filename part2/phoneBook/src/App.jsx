@@ -1,77 +1,87 @@
-import { useState } from 'react'
+
 import {Names} from "./components/Names";
+import { useState } from 'react';
+
+const Filter = ({ search, handleSearchChange }) => (
+  <div>
+    filter shown with/search: <input value={search} onChange={handleSearchChange} />
+  </div>
+);
+
+const PersonForm = ({
+  addName,
+  newName,
+  handleNameChange,
+  newNumber,
+  handleNumberChange,
+}) => (
+  <form onSubmit={addName}>
+    <div>
+      name: <input value={newName} onChange={handleNameChange} />
+    </div>
+    <div>
+      number: <input value={newNumber} onChange={handleNumberChange} />
+    </div>
+    <div>
+      <button type="submit">add</button>
+    </div>
+  </form>
+);
+
+// const Names = ({ person }) => (
+//   <div>
+//     {person.name} {person.number}
+//   </div>
+// );
+
 const App = (props) => {
-  const [persons, setPersons] = useState(props.persons)
-  const [newName, setNewName] = useState('')
-  const [newNumber, setNewNumber] = useState('')
-  const [search,setSearch] = useState('')
-  const [filter,setFilter] = useState(props.persons)
+  const [persons, setPersons] = useState(props.persons);
+  const [newName, setNewName] = useState('');
+  const [newNumber, setNewNumber] = useState('');
+  const [search, setSearch] = useState('');
 
-const addName = (event) => {
- const nameExists = persons.some(person => person.name === newName);
-if (nameExists){
-  alert(`${newName} is already added to  phonebook`);
-  return ;
-}
+  const addName = (event) => {
+    event.preventDefault();
+    if (persons.some((person) => person.name === newName)) {
+      alert(`${newName} is already added to phonebook`);
+      return;
+    }
+    const personObject = {
+      name: newName,
+      number: newNumber,
+      id: persons.length + 1,
+    };
+    setPersons(persons.concat(personObject));
+    setNewName('');
+    setNewNumber('');
+  };
 
-  event.preventDefault()
-  const personObject = {
-    id: persons.length + 1,
-    name: newName,
-    number: newNumber,
-  }
-  setPersons(persons.concat(personObject))
-  setNewName('')
-  setNewNumber('');
- 
-}
+  const handleNameChange = (event) => setNewName(event.target.value);
+  const handleNumberChange = (event) => setNewNumber(event.target.value);
+  const handleSearchChange = (event) => setSearch(event.target.value);
 
-const handleNameChange = (event) => {
-   console.log(event.target.value)
-  setNewName(event.target.value)
-}
+  const personsToShow = persons.filter((person) =>
+    person.name.toLowerCase().includes(search.toLowerCase())
+  );
 
-const handleNumberChange = (event)=>{
-  console.log(event.target.value);
-  setNewNumber(event.target.value)
-}
-
-const handleSearchChange = (event)=>{
-  console.log(event.target.value);
-  setSearch(event.target.value)
-
- const filterItems = persons.filter(person =>
-  person.name.toLowerCase().includes(event.target.value.toLowerCase())
-)
-  setFilter(filterItems);
-}
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>filter shown with/search: <input value={search} onChange={handleSearchChange} />
-      </div>
-      
-      <h1>add a new</h1>
-      <form onSubmit={addName}>
-        <div>
-          name: <input  value = {newName} onChange= {handleNameChange} type= "text"/>
-        </div>
-
-          <div>number: <input value= {newNumber} onChange= {handleNumberChange} type= "number"/>
-          </div>
-
-        <div>
-          <button type="submit">add</button>
-        </div>
-
-      </form>
-
-      <h2>Numbers</h2>
-    {filter.map((person)=>{
-      return<Names key= {person.id} person= {person} />
-    })}
+      <Filter search={search} handleSearchChange={handleSearchChange} />
+      <h3>Add a new</h3>
+      <PersonForm
+        addName={addName}
+        newName={newName}
+        handleNameChange={handleNameChange}
+        newNumber={newNumber}
+        handleNumberChange={handleNumberChange}
+      />
+      <h3>Numbers</h3>
+      {personsToShow.map((person) => (
+        <Names key={person.id} person={person} />
+      ))}
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;
