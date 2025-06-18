@@ -27,12 +27,17 @@ const PersonForm = ({
     </div>
   </form>
 );
-
-// const Names = ({ person }) => (
-//   <div>
-//     {person.name} {person.number}
-//   </div>
-// );
+const Persons = ({ persons }) => {
+  return (
+    <div>
+      {persons.map((person) => (
+        <div key={person.id}>
+          {person.name} {person.number}
+        </div>
+      ))}
+    </div>
+  );
+};
 
 const App = (props) => {
   const [persons, setPersons] = useState(props.persons);
@@ -77,9 +82,7 @@ const App = (props) => {
         handleNumberChange={handleNumberChange}
       />
       <h3>Numbers</h3>
-      {personsToShow.map((person) => (
-        <Names key={person.id} person={person} />
-      ))}
+      <Persons persons={personsToShow} />
     </div>
   );
 };
