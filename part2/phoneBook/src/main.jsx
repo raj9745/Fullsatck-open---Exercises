@@ -12,5 +12,5 @@ const persons =[
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <App persons = {persons} />
-  </StrictMode>,
+  </StrictMode>
 )
