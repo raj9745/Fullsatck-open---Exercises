@@ -1,7 +1,6 @@
-
-// import {Names} from "./components/Names";
 import { useState, useEffect } from 'react';
-import axios from 'axios'
+import personsService from './services/person';
+
 const Filter = ({ search, handleSearchChange }) => (
   <div>
     filter shown with/search: <input value={search} onChange={handleSearchChange} />
@@ -27,19 +26,20 @@ const PersonForm = ({
     </div>
   </form>
 );
-const Persons = ({ persons }) => {
+const Persons = ({ persons,handleDelete }) => {
   return (
     <div>
       {persons.map((person) => (
         <div key={person.id}>
           {person.name} {person.number}
+          <button onClick={() => handleDelete(person.id, person.name)}>delete</button>
         </div>
       ))}
     </div>
   );
 };
 
-const App = (props) => {
+const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
@@ -47,9 +47,10 @@ const App = (props) => {
 
   // Fetch data from backend when component mounts
   useEffect(() => {
-    axios.get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data);
+    personsService
+      .getAll()
+      .then(initialPersons => {
+        setPersons(initialPersons);
       });
   }, []);
 
@@ -67,15 +68,23 @@ const App = (props) => {
     // id: persons.length + 1,
   };
 
-
-  const baseUrl = 'http://localhost:3001/persons';
-  axios.post(baseUrl, personObject).then(response => {
-    console.log("response")
-    setPersons(persons.concat(response.data));
-    setNewName('');
-    setNewNumber('');
-  });
+personsService
+      .create(personObject)
+      .then(returnedPerson => {
+        setPersons(persons.concat(returnedPerson));
+        setNewName('');
+        setNewNumber('');
+      });
 };
+const handleDelete= (id,name)=>{
+  if(window.confirm(`Delete${name}?`)){
+let removeId = personsService.remove(id);
+removeId.then(()=>{
+  setPersons(persons.filter(person => person.id !== id));
+})
+
+  }
+}
   const handleNameChange = (event) => setNewName(event.target.value);
   const handleNumberChange = (event) => setNewNumber(event.target.value);
   const handleSearchChange = (event) => setSearch(event.target.value);
@@ -97,7 +106,7 @@ const App = (props) => {
         handleNumberChange={handleNumberChange}
       />
       <h3>Numbers</h3>
-      <Persons persons={personsToShow} />
+      <Persons persons={personsToShow}  handleDelete={handleDelete} />
     </div>
   );
 };
