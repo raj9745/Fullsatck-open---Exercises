@@ -4,7 +4,8 @@ import Notification from './components/Notification';
 
 const Filter = ({ search, handleSearchChange }) => (
   <div>
-    filter shown with <input value={search} onChange={handleSearchChange} />
+    filter shown with <input value={search} onChange={handleSearchChange}
+      />
   </div>
 );
 
@@ -17,10 +18,23 @@ const PersonForm = ({
 }) => (
   <form onSubmit={addName}>
     <div>
-      name: <input value={newName} onChange={handleNameChange} />
+        name: <input
+        type="text"
+        pattern="^[A-Za-z\s]+$"
+        value={newName}
+        onChange={handleNameChange}
+        title="Only letters and spaces are allowed"
+        required
+      />
     </div>
     <div>
-      number: <input value={newNumber} onChange={handleNumberChange} />
+      number: <input
+    type="tel"
+    pattern="[0-9\-+\s]*"
+    value={newNumber}
+    onChange={handleNumberChange}
+    title="Only numbers, spaces, + and - are allowed"
+  />
     </div>
     <div>
       <button type="submit">add</button>
@@ -45,6 +59,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('');
   const [search, setSearch] = useState('');
   const [notification, setNotification] = useState(null);
+  
 
   useEffect(() => {
     personsService.getAll().then(initialPersons => {
@@ -67,16 +82,29 @@ const App = () => {
       const confirmUpdate = window.confirm(
         `${newName} is already added to phonebook, replace the old number with a new one?`
       );
-      if (confirmUpdate) {
-        const updatedPerson = { ...existingPerson, number: newNumber };
-        personsService.update(existingPerson.id, updatedPerson)
-          .then(returnedPerson => {
-            setPersons(persons.map(p => p.id !== existingPerson.id ? p : returnedPerson));
-            setNewName('');
-            setNewNumber('');
-            setNotification(`Updated ${returnedPerson.name}'s number`);
-          });
-      }
+     if (confirmUpdate) {
+  const updatedPerson = { ...existingPerson, number: newNumber };
+  personsService
+    .update(existingPerson.id, updatedPerson)
+    .then(returnedPerson => {
+      setPersons(persons.map(p => p.id !== existingPerson.id ? p : returnedPerson));
+      setNewName('');
+      setNewNumber('');
+      setNotification({
+        text :`Updated ${returnedPerson.name}'s number`,
+      type: 'success',
+    });
+    })
+    .catch(error => {
+      console.log(error);
+      setNotification({
+       text: `Information of ${existingPerson.name} has already been removed from server`,
+       type :'error'
+      });
+      setPersons(persons.filter(p => p.id !== existingPerson.id));
+    });
+}
+
     } else {
       const personObject = {
         name: newName,
@@ -87,8 +115,12 @@ const App = () => {
           setPersons(persons.concat(returnedPerson));
           setNewName('');
           setNewNumber('');
-          setNotification(`Added ${returnedPerson.name}`);
+          setNotification({
+            text :`Added ${returnedPerson.name}`,
+          type :'success'
         });
+        });
+
     }
   };
 
@@ -96,10 +128,15 @@ const App = () => {
     if (window.confirm(`Delete ${name}?`)) {
       personsService.remove(id).then(() => {
         setPersons(persons.filter(p => p.id !== id));
-        setNotification(`Deleted ${name}`);
+        setNotification({
+          text: `Deleted ${name}`,
+        type: 'success'
+      });
+      
       });
     }
   };
+  
 
   const handleNameChange = (event) => setNewName(event.target.value);
   const handleNumberChange = (event) => setNewNumber(event.target.value);
