@@ -76,7 +76,13 @@ const App = () => {
 
   const addName = (event) => {
     event.preventDefault();
+    
     const existingPerson = persons.find(p => p.name === newName);
+   // Alert if both name and number are already present
+  if (existingPerson && existingPerson.number === newNumber) {
+    alert(`${newName} with number ${newNumber} is already added to phonebook`);
+    return;
+  }
 
     if (existingPerson) {
       const confirmUpdate = window.confirm(
