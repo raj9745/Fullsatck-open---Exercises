@@ -1,1 +1,7 @@
 DELETE http://localhost:3001/api/persons/2
+###
+GET http://localhost:3001/api/persons
+###
+curl -X POST http://localhost:3001/api/persons \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Raj Kumar", "number": "9876543210"}'

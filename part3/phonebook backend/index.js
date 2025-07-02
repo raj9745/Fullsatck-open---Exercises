@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+app.use(express.json())
   let persons =[
     { 
       "id": "1",
@@ -23,6 +24,30 @@ const app = express()
     }
 ];
 
+// POST route to add new person
+app.post('/api/persons', (request, response) => {
+  const body = request.body
+
+  // Check if name or number is missing
+  if (!body.name || !body.number) {
+    return response.status(400).json({ error: 'name or number missing' })
+  }
+
+  // Check for duplicate name
+  const nameExists = persons.find(p => p.name === body.name)
+  if (nameExists) {
+    return AuthenticatorAttestationResponse.status(400).json({ error: 'name must be unique' })
+  }
+
+  const newPerson = {
+    id: Math.floor(Math.random() * 1000000).toString(), // generate a random id
+    name: body.name,
+    number: body.number
+  }
+
+  persons.push(newPerson)
+  response.json(newPerson)
+})
 
 // delete persons/id route
 app.delete ('/api/persons/:id', (request, response)=>{
