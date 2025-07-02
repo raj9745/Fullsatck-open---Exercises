@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
-app.use(express.json())
+ app.use(express.json())
+
   let persons =[
     { 
       "id": "1",
@@ -36,7 +37,7 @@ app.post('/api/persons', (request, response) => {
   // Check for duplicate name
   const nameExists = persons.find(p => p.name === body.name)
   if (nameExists) {
-    return AuthenticatorAttestationResponse.status(400).json({ error: 'name must be unique' })
+    return response.status(400).json({ error: 'name must be unique' })
   }
 
   const newPerson = {

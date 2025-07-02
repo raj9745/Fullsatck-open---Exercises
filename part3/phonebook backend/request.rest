@@ -5,3 +5,12 @@ GET http://localhost:3001/api/persons
 curl -X POST http://localhost:3001/api/persons \
   -H "Content-Type: application/json" \
   -d '{"name": "Raj Kumar", "number": "9876543210"}'
+###
+curl -X POST http://localhost:3001/api/persons \
+  -H "Content-Type: application/json" \
+  -d '{"name": "", "number": ""}'
+
+###
+curl -X POST http://localhost:3001/api/persons \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Arto Hellas", "number": "1234"}'
