@@ -33,7 +33,20 @@ app.get('/api/persons', (request, response) => {
 app.get ('/info',(request,response)=>{
    const count = persons.length
   const date = new Date()
-  response.send(`<p>Phonebook has info for ${count} people</p><p>${date}</p>`)
+  response.send(`<p>Phonebook has info for ${count} people</p>
+    <p>${date}</p>`)
+});
+ 
+// persons/id route
+app.get('/api/persons/:id', (request, response)=>{
+    const id = request.params.id
+    const person = persons.find(p=>p.id === id)
+    if(person){
+        response.json(person)
+    } else{
+        response.status(404).send(` the ${PORT} is not available`)
+    }
+    // console.log(id)
 })
 // Start server
 const PORT = 3001
