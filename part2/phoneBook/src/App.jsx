@@ -110,13 +110,13 @@ const App = () => {
       setPersons(persons.filter(p => p.id !== existingPerson.id));
     });
 }
-
-    } else {
+} else {
       const personObject = {
         name: newName,
         number: newNumber,
       };
-      personsService.create(personObject)
+      personsService
+      .create(personObject)
         .then(returnedPerson => {
           setPersons(persons.concat(returnedPerson));
           setNewName('');
@@ -125,7 +125,7 @@ const App = () => {
             text :`Added ${returnedPerson.name}`,
           type :'success'
         });
-        });
+        }).catch(error =>console.log(error));
 
     }
   };
@@ -139,7 +139,7 @@ const App = () => {
         type: 'success'
       });
       
-      });
+      }).catch(error =>console.log(error));
     }
   };
   
