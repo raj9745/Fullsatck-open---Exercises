@@ -12,7 +12,7 @@ You can access the backend here:
 
 ```bash
 npm install
-npm start
+npm run dev
 
 Then:
 
