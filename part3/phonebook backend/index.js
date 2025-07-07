@@ -1,10 +1,13 @@
-const express = require('express')
-const morgan =  require('morgan')
+const express = require('express');
+const morgan = require('morgan');
 const cors = require('cors');
+const path = require('path');
 const app = express()
-app.use(cors());
 
- app.use(express.json())
+app.use(cors());
+app.use(express.json());
+app.use(express.static('dist'));
+
  morgan.token('body',(req)=>{
   return req.method === "POST"? JSON.stringify(req.body) : ''
  });
@@ -12,6 +15,7 @@ app.use(cors());
  app.use(
   morgan(':method :url :status :res[content-length] - :response-time ms :body')
 )
+
 //  app.use(morgan('tiny'))
   let persons =[
     { 
@@ -36,8 +40,8 @@ app.use(cors());
     }
 ];
 
- app.get('/api/persons',(req,res)=>{
-  res.json(persons)
+ app.get('/api/persons',(request,response)=>{
+  response.json(persons)
  })
 
 // POST route to add new person
@@ -93,10 +97,10 @@ app.get ('/info',(request,response)=>{
     <p>${date}</p>`)
 });
  
-//  /api/persons route
-app.get('/api/persons', (request, response) => {
-  response.json(persons)
-});
+// app.get('/*', (req, res) => {
+//   res.sendFile(path.resolve(__dirname, 'dist', 'index.html'));
+// });
+
 // Start server
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
