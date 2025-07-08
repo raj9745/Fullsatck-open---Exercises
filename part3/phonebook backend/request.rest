@@ -1,5 +1,4 @@
-DELETE http://localhost:3001/api/persons/2
-###
+
 GET http://localhost:3001/api/persons
 ###
 curl -X POST http://localhost:3001/api/persons \
@@ -14,3 +13,15 @@ curl -X POST http://localhost:3001/api/persons \
 curl -X POST http://localhost:3001/api/persons \
   -H "Content-Type: application/json" \
   -d '{"name": "Arto Hellas", "number": "1234"}'
+
+
+### Create new person
+
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+  "name": "raj kumar hero",
+  "number": "1234"
+}
+

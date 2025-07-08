@@ -1,12 +1,11 @@
-const express = require('express');
-const morgan = require('morgan');
+const express = require('express')
+const morgan =  require('morgan')
 const cors = require('cors');
-const path = require('path');
-const app = express()
+const app = express();
 
 app.use(cors());
-app.use(express.json());
 app.use(express.static('dist'));
+ app.use(express.json());
 
  morgan.token('body',(req)=>{
   return req.method === "POST"? JSON.stringify(req.body) : ''
@@ -15,7 +14,6 @@ app.use(express.static('dist'));
  app.use(
   morgan(':method :url :status :res[content-length] - :response-time ms :body')
 )
-
 //  app.use(morgan('tiny'))
   let persons =[
     { 
@@ -40,8 +38,10 @@ app.use(express.static('dist'));
     }
 ];
 
- app.get('/api/persons',(request,response)=>{
-  response.json(persons)
+
+
+ app.get('/api/persons',(req,res)=>{
+  res.json(persons)
  })
 
 // POST route to add new person
@@ -72,7 +72,7 @@ app.post('/api/persons', (request, response) => {
 
 // delete persons/id route
 app.delete ('/api/persons/:id', (request, response)=>{
-const id = Number(request.params.id)
+const id = request.params.id
 persons = persons.filter(person => person.id !==id)
 response.status(202).send(`the note with ID ${id} not found `)
 });
@@ -97,9 +97,6 @@ app.get ('/info',(request,response)=>{
     <p>${date}</p>`)
 });
  
-// app.get('/*', (req, res) => {
-//   res.sendFile(path.resolve(__dirname, 'dist', 'index.html'));
-// });
 
 // Start server
 const PORT = process.env.PORT || 3001;
