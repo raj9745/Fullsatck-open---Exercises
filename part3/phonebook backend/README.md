@@ -14,7 +14,7 @@ This is the backend for the Full Stack Open Phonebook App, built with Node.js an
 
 You can access the backend here:
 
-👉 https://phonebook-backend.onrender.com/api/persons
+👉https://fullsatck-open-exercises-2.onrender.com/
 
 ## 📦 How to Run Locally
 
