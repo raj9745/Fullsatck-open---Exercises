@@ -2,9 +2,11 @@ const express = require('express')
 const morgan =  require('morgan')
 const cors = require('cors');
 const app = express()
-app.use(cors());
 
- app.use(express.json())
+app.use(cors());
+app.use(express.static('dist'));
+ app.use(express.json());
+
  morgan.token('body',(req)=>{
   return req.method === "POST"? JSON.stringify(req.body) : ''
  });
@@ -35,6 +37,8 @@ app.use(cors());
       "number": "39-23-6423122"
     }
 ];
+
+
 
  app.get('/api/persons',(req,res)=>{
   res.json(persons)
@@ -68,7 +72,7 @@ app.post('/api/persons', (request, response) => {
 
 // delete persons/id route
 app.delete ('/api/persons/:id', (request, response)=>{
-const id = Number(request.params.id)
+const id = request.params.id
 persons = persons.filter(person => person.id !==id)
 response.status(202).send(`the note with ID ${id} not found `)
 });
@@ -93,10 +97,7 @@ app.get ('/info',(request,response)=>{
     <p>${date}</p>`)
 });
  
-//  /api/persons route
-app.get('/api/persons', (request, response) => {
-  response.json(persons)
-});
+
 // Start server
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
