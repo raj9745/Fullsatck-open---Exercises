@@ -104,6 +104,26 @@ const errorHandler = (error, request, response, next) => {
 
 app.use(errorHandler);
 
+//update the phone number 
+app.put('/api/persons/:id', (request, response, next) => {
+  const { name, number } = request.body
+
+  const person = {
+    name,
+    number
+  }
+
+  // `{ new: true, runValidators: true, context: 'query' }` makes sure it returns updated doc and validates it
+  Person.findByIdAndUpdate(request.params.id, person, {
+    new: true,
+    runValidators: true,
+    context: 'query'
+  })
+    .then(updatedPerson => {
+      response.json(updatedPerson)
+    })
+    .catch(error => next(error))
+})
 
 
 
