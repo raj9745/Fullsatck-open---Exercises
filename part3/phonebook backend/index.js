@@ -6,6 +6,8 @@ const Person = require('./models/person');
 const mongoose = require('mongoose')
 const app = express();
 
+
+
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('Connected to MongoDB'))
@@ -86,6 +88,8 @@ Person.findByIdAndRemove(id)
   .catch(error => next(error));
 });
 
+
+
 // === Error Handling Middleware ===
 app.use((error, req, res, next) => {
   console.error(error.message);
@@ -136,4 +140,5 @@ app.get('/api/persons', async (req, res, next) => {
   }
 })
 
-mongoose.connect(process.env.MONGODB_URI)
+
+
