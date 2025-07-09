@@ -86,16 +86,7 @@ Person.findByIdAndRemove(id)
   .catch(error => next(error));
 });
 
-// === Error Handling Middleware ===
-app.use((error, req, res, next) => {
-  console.error(error.message);
 
-  if (error.name === 'CastError') {
-    return res.status(400).json({ error: 'malformatted id' });
-  }
-
-  next(error);
-})
 
 //  /info route
 app.get ('/info',(request,response)=>{
@@ -109,16 +100,7 @@ app.get ('/info',(request,response)=>{
   }
 });
  
-// Error handling middleware
-app.use((error, req, res, next) => {
-  console.error(error.message);
 
-  if (error.name === 'CastError') {
-    return res.status(400).json({ error: 'malformatted id' });
-  }
-
-  next(error);
-});
 
 // Start server
 const PORT = process.env.PORT || 3001;
