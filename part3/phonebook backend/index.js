@@ -87,20 +87,7 @@ Person.findByIdAndRemove(id)
 });
 
 
-
-//  /info route
-app.get ('/info',(request,response)=>{
-  try{
-    const count = persons.length
-  const date = new Date()
-  response.send(`<p>Phonebook has info for ${count} people</p>
-    <p>${date}</p>`)
-  } catch (error) {
-    res.status(500).send('Internal server error');
-  }
-});
- 
-// Error handling middleware
+//Error handling middleware
 const errorHandler = (error, request, response, next) => {
   console.error(error.name)
 
@@ -115,7 +102,10 @@ const errorHandler = (error, request, response, next) => {
   next(error)
 }
 
-app.use(er
+app.use(errorHandler);
+
+
+
 
 // Start server
 const PORT = process.env.PORT || 3001;
