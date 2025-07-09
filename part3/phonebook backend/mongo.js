@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+require('dotenv').config();
 const password = process.argv[2];
 if (!password) {
   console.log('Please provide the password as an argument:');
@@ -7,12 +7,14 @@ if (!password) {
   process.exit(1);
 }
 
-const url = `mongodb+srv://raj:${password}@cluster0.jekmclm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+const url = process.env.MONGODB_URI;
 
 mongoose.connect(url, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-});
+}).catch(error => {
+    console.log('error connecting to MongoDB:', error.message)
+  })
 
 const personSchema = new mongoose.Schema({
   name: String,
@@ -30,6 +32,7 @@ if (process.argv.length === 3) {
     });
     mongoose.connection.close();
   });
+
 } else if (process.argv.length === 5) {
   // Password + name + number → add new
   const name = process.argv[3];
@@ -48,3 +51,5 @@ if (process.argv.length === 3) {
   console.log('  node mongo.js <password> <name> <number>');
   mongoose.connection.close();
 }
+
+module.exports = mongoose.model('Person', personSchema);
