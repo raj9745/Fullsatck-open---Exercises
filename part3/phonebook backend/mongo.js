@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
 const password = process.argv[2];
-
 if (!password) {
   console.log('Please provide the password as an argument:');
   console.log('  node mongo.js <password> [name] [number]');
