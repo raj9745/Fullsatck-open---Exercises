@@ -19,7 +19,10 @@ app.get('/api/persons', async (req, res, next) => {
     const people = await Person.find({})
     res.json(people)
   } catch (error) {
-    console.error('Error fetching persons:', error.message)
-    next(error)
+    console.error('Error fetching persons:', error.message);
+    next(error);
   }
-})
+});
+
+
+
