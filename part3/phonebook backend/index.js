@@ -112,17 +112,6 @@ app.get ('/info',(request,response)=>{
     res.status(500).send('Internal server error');
   }
 });
- 
-// Error handling middleware
-app.use((error, req, res, next) => {
-  console.error(error.message);
-
-  if (error.name === 'CastError') {
-    return res.status(400).json({ error: 'malformatted id' });
-  }
-
-  next(error);
-});
 
 // Start server
 const PORT = process.env.PORT || 3001;
