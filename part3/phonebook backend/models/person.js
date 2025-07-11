@@ -14,15 +14,15 @@ personSchema.set('toJSON', {
 
 module.exports = mongoose.model('Person', personSchema);
 
-app.get('/api/persons', async (req, res, next) => {
-  try {
-    const people = await Person.find({})
-    res.json(people)
-  } catch (error) {
-    console.error('Error fetching persons:', error.message);
-    next(error);
-  }
-});
+// app.get('/api/persons', async (req, res, next) => {
+//   try {
+//     const people = await Person.find({})
+//     res.json(people)
+//   } catch (error) {
+//     console.error('Error fetching persons:', error.message);
+//     next(error);
+//   }
+// });
 
 
 

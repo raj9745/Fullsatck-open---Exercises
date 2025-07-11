@@ -1,4 +1,5 @@
 require('dotenv').config();
+
 const express = require('express')
 const morgan =  require('morgan')
 const cors = require('cors');
@@ -44,20 +45,34 @@ app.get('/api/persons/:id', (req, res, next) => {
       if (person) {
         res.json(person);
       } else {
-        res.status(404).send({ error: 'Person not found' });
+        res.status(404).json({ error: 'Person not found' });
       }
     })
     .catch(error => next(error));
 });
 
+  // delete persons/id route
+app.delete ('/api/persons/:id', (request, response)=>{
+const id = request.params.id
+Person.findByIdAndRemove(id)
+  .then(result => {
+    if (result) {
+      response.status(204).end();
+    } else {
+      response.status(404).send({ error: 'Person not found' });
+    }
+  })
+  .catch(error => next(error));
+});
+
 // POST route to add new person
 app.post('/api/persons', (request, response) => {
-  const body = request.body
+  const  { name, number } = request.body
 
-  console.log('Recieved POST:',body)
+  console.log('Recieved POST:', { name, number })
 
   // Check if name or number is missing
-  if (!body.name || !body.number) {
+  if (!name || !number) {
     return response.status(400).json({ error: 'name or number missing' })
   }
   
@@ -74,35 +89,24 @@ const person = new Person({
  
 })
 
-// delete persons/id route
-app.delete ('/api/persons/:id', (request, response)=>{
-const id = request.params.id
-Person.findByIdAndRemove(id)
-  .then(result => {
-    if (result) {
-      response.status(204).end();
-    } else {
-      response.status(404).send({ error: 'Person not found' });
-    }
-  })
-  .catch(error => next(error));
-});
-
 
 
 // === Error Handling Middleware ===
-app.use((error, req, res, next) => {
-  console.error(error.message);
+
+ const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
 
   if (error.name === 'CastError') {
-    return res.status(400).json({ error: 'malformatted id' });
+    return response.status(400).send({ error: 'malformatted id' })
+
+  } else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message })
   }
 
-  next(error);
-})
-
+  next(error)
+}
 //  /info route
-app.get ('/info',(request,response)=>{
+app.get ('/info',(request,response,next)=>{
   try{
     const count = persons.length
   const date = new Date()
@@ -110,19 +114,11 @@ app.get ('/info',(request,response)=>{
     <p>${date}</p>`)
   } catch (error) {
     res.status(500).send('Internal server error');
+    next(error);
   }
 });
  
-// Error handling middleware
-app.use((error, req, res, next) => {
-  console.error(error.message);
 
-  if (error.name === 'CastError') {
-    return res.status(400).json({ error: 'malformatted id' });
-  }
-
-  next(error);
-});
 
 // Start server
 const PORT = process.env.PORT || 3001;
@@ -130,15 +126,7 @@ app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
-app.get('/api/persons', async (req, res, next) => {
-  try {
-    const people = await Person.find({})
-    res.json(people)
-  } catch (error) {
-    console.error('Error fetching persons:', error.message)
-    next(error)
-  }
-})
+
 
 
 
