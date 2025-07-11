@@ -76,6 +76,7 @@ const App = () => {
 
   const addName = (event) => {
     event.preventDefault();
+   
     
     const existingPerson = persons.find(p => p.name === newName);
    // Alert if both name and number are already present
@@ -125,7 +126,15 @@ const App = () => {
             text :`Added ${returnedPerson.name}`,
           type :'success'
         });
-        }).catch(error =>console.log(error));
+        }).catch(error => {
+        setNotification({
+          text: error.response.data.error,
+          type: 'error'
+        });
+        setTimeout(() => {
+          setNotification(null);
+        }, 5000);
+      });
 
     }
   };
@@ -136,10 +145,9 @@ const App = () => {
         setPersons(persons.filter(p => p.id !== id));
         setNotification({
           text: `Deleted ${name}`,
-        type: 'success'
+        type: 'success',
       });
-      
-      }).catch(error =>console.log(error));
+    }).catch(error =>console.log(error));
     }
   };
   
@@ -172,3 +180,4 @@ const App = () => {
 };
 
 export default App;
+ 
