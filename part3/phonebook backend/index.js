@@ -66,7 +66,7 @@ Person.findByIdAndRemove(id)
 });
 
 // POST route to add new person
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response,next) => {
   const  { name, number } = request.body
 
   console.log('Recieved POST:', { name, number })
@@ -75,7 +75,7 @@ app.post('/api/persons', (request, response) => {
   if (!name || !number) {
     return response.status(400).json({ error: 'name or number missing' })
   }
-  
+    const body = request.body; 
 const person = new Person({
     name: body.name,
     number: body.number,
