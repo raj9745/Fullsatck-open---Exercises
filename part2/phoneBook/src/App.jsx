@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import personsService from './services/person';
 import Notification from './components/Notification';
-
+import axios from 'axios';
 const Filter = ({ search, handleSearchChange }) => (
   <div>
     filter shown with <input value={search} onChange={handleSearchChange}
@@ -130,19 +130,19 @@ const App = () => {
     }
   };
 
-  const handleDelete = (id, name) => {
-    if (window.confirm(`Delete ${name}?`)) {
-      personsService.remove(id).then(() => {
-        setPersons(persons.filter(p => p.id !== id));
-        setNotification({
-          text: `Deleted ${name}`,
-        type: 'success'
-      });
-      
-      }).catch(error =>console.log(error));
-    }
+ const handleDelete = (id) => {
+  axios
+    .delete(`/api/persons/${id}`)
+    .then(() => {
+      setPersons(persons.filter(p => p.id !== id))
+    })
+    .catch(error => {
+      console.error("Failed to delete person:", error)
+      console.log("Deleting person with id:", id);
+
+      alert("This contact may have already been removed.")
+    })
   };
-  
 
   const handleNameChange = (event) => setNewName(event.target.value);
   const handleNumberChange = (event) => setNewNumber(event.target.value);
