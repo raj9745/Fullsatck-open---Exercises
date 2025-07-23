@@ -52,17 +52,19 @@ app.get('/api/persons/:id', (req, res, next) => {
 });
 
   // delete persons/id route
-app.delete ('/api/persons/:id', (request, response)=>{
-const id = request.params.id
-Person.findByIdAndRemove(id)
-  .then(result => {
-    if (result) {
-      response.status(204).end();
-    } else {
-      response.status(404).send({ error: 'Person not found' });
-    }
-  })
-  .catch(error => next(error));
+app.delete('/api/persons/:id', (request, response, next) => {
+  const id = request.params.id;
+  console.log("🧨 Backend received DELETE request for ID:", id); // ← shows in VS Code terminal
+
+  Person.findByIdAndDelete(id)
+    .then(result => {
+      if (result) {
+        response.status(204).end();
+      } else {
+        response.status(404).send({ error: 'person not found' });
+      }
+    })
+    .catch(error => next(error));
 });
 
 // POST route to add new person

@@ -25,3 +25,5 @@ Content-Type: application/json
   "number": "1234"
 }
 
+###
+DELETE http://localhost:3001/api/persons/687a2ce6aa3f95e73fac6946
