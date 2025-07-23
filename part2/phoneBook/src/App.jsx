@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
-import personsService from './services/person';
+import personsService from './services/personService';
 import Notification from './components/Notification';
-import axios from 'axios';
 const Filter = ({ search, handleSearchChange }) => (
   <div>
     filter shown with <input value={search} onChange={handleSearchChange}
@@ -42,16 +41,19 @@ const PersonForm = ({
   </form>
 );
 
-const Persons = ({ persons, handleDelete }) => (
-  <div>
-    {persons.map((person) => (
-      <div key={person.id}>
-        {person.name} {person.number}
-        <button onClick={() => handleDelete(person.id, person.name)}>delete</button>
-      </div>
-    ))}
-  </div>
-);
+const Persons = ({ persons, handleDelete }) => {
+  console.log("persons deleted by raj:",persons)
+  return (
+    <div>
+      {persons.map(person => (
+        <div key={person.id}>
+          {person.name} {person.number}
+          <button onClick={() => handleDelete(person.id)}>delete</button>
+        </div>
+      ))}
+    </div>
+  )
+}
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -62,7 +64,9 @@ const App = () => {
   
 
   useEffect(() => {
+
     personsService.getAll().then(initialPersons => {
+        console.log("📋 Initial persons loaded:", initialPersons); 
       setPersons(initialPersons);
     });
   }, []);
@@ -129,20 +133,20 @@ const App = () => {
 
     }
   };
-
- const handleDelete = (id) => {
-  axios
-    .delete(`/api/persons/${id}`)
+const handleDelete = (id) => {
+  console.log("ID deleted by raj:", id);
+    // check this in console
+  personsService
+    .remove(id)
     .then(() => {
-      setPersons(persons.filter(p => p.id !== id))
+      console.log("Deleted successfully");
+       setPersons(persons.filter(p => p.id !== id));
     })
     .catch(error => {
-      console.error("Failed to delete person:", error)
-      console.log("Deleting person with id:", id);
-
-      alert("This contact may have already been removed.")
-    })
-  };
+      console.error("Delete failed:", error);
+      
+    });
+};
 
   const handleNameChange = (event) => setNewName(event.target.value);
   const handleNumberChange = (event) => setNewNumber(event.target.value);
