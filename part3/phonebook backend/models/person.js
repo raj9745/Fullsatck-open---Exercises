@@ -8,7 +8,7 @@ const personSchema = new mongoose.Schema({
   },
     number: {
     type: String,
-     minlength: 8,
+     minlength: 5,
     required: true,
     validate: {
       validator: function (v) {
@@ -36,6 +36,7 @@ module.exports = mongoose.model('Person', personSchema);
 //     next(error);
 //   }
 // });
+
 
 
 
