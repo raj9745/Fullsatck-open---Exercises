@@ -134,18 +134,32 @@ const App = () => {
     }
   };
 const handleDelete = (id) => {
+    const person = persons.find(p => p.id === id);
   console.log("ID deleted by raj:", id);
+    if (!person) return;
     // check this in console
-  personsService
+    if (window.confirm(`Delete ${person.name}?`)){
+       personsService
     .remove(id)
     .then(() => {
       console.log("Deleted successfully");
        setPersons(persons.filter(p => p.id !== id));
+        setNotification({
+          text: `Deleted ${person.name}`,
+          type: 'success',
+        });
     })
     .catch(error => {
       console.error("Delete failed:", error);
-      
+        setNotification({
+          text: `Information of ${person.name} has already been removed from server`,
+          type: 'error',
+        });
+          setPersons(persons.filter(p => p.id !== id));
+ 
     });
+    }
+ 
 };
 
   const handleNameChange = (event) => setNewName(event.target.value);
